@@ -41,53 +41,35 @@ header {
     padding:15px;
     box-shadow: 0 0 15px rgba(164,0,255,0.5);
     transition: 0.3s;
-    position: relative;
 }
 .card:hover {
     transform: scale(1.03);
     border-color:#ff66ff;
     box-shadow:0 0 25px rgba(255,0,255,0.7);
 }
+.avatar {
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    border:3px solid #ff00ff;
+    object-fit:cover;
+}
 .name {
     font-size:20px;
     font-weight:bold;
     color:#ff99ff;
     text-align:center;
-    margin-top: 15px;
 }
 .status {
     font-size:14px;
-    margin-top:4px;
-    display: flex;
-    align-items: center;
-    gap:8px;
+    display:flex;
+    align-items:center;
+    gap:6px;
 }
 .live-dot {
-    width:50px;
-    height:50px;
+    width:12px;
+    height:12px;
     border-radius:50%;
-    overflow: hidden;
-    border: 3px solid #ff00ff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-.live-dot::after {
-    content:'';
-    position:absolute;
-    width:100%;
-    height:100%;
-    border-radius:50%;
-    background:transparent;
-}
-.live-dot.online { background-color: lime; }
-.live-dot.offline { background-color: red; }
-.live-dot img {
-    width: 46px;
-    height: 46px;
-    border-radius:50%;
-    border:2px solid #fff;
 }
 .btn {
     padding:8px 14px;
@@ -119,26 +101,28 @@ header {
 <div class="container" id="streamers"></div>
 
 <script>
-const streamers = ["JonVlogs","MarcoVe","Fontinnelerj","jhowrj1"];
+const streamers = [
+  { username:"JonVlogs" },
+  { username:"MarcoVe" },
+  { username:"Fontinnelerj" },
+  { username:"jhowrj1" }
+];
+
 const container = document.getElementById("streamers");
 
-streamers.forEach(async user => {
-  const avatarUrl = `https://decapi.me/twitch/avatar/${user}`;
-  const twitchUrl = `https://twitch.tv/${user}`;
-  const liveUrl = `https://decapi.me/twitch/online/${user}`;
+streamers.forEach(async s => {
+  const avatarUrl = `https://decapi.me/twitch/avatar/${s.username}`;
+  const twitchUrl = `https://twitch.tv/${s.username}`;
+  const liveUrl = `https://decapi.me/twitch/online/${s.username}`;
 
-  const liveText = await fetch(liveUrl).then(r=>r.text());
+  const liveText = await fetch(liveUrl).then(r=>r.text()).catch(()=> "offline");
   const isLive = liveText.toLowerCase().includes("online");
 
   const cardHTML = `
     <div class="card">
-      <div class="status">
-        <div class="live-dot ${isLive?'online':'offline'}">
-          <img src="${avatarUrl}" alt="${user} Avatar">
-        </div>
-        ${isLive?'AO VIVO':'Offline'}
-      </div>
-      <div class="name">${user}</div>
+      <img class="avatar" src="${avatarUrl}" alt="${s.username} Avatar">
+      <div class="name">${s.username}</div>
+      <div class="status"><span class="live-dot" style="background:${isLive?'lime':'red'}"></span>${isLive?'AO VIVO':'Offline'}</div>
       <a class="btn" href="${twitchUrl}" target="_blank">Ver Twitch</a>
     </div>
   `;
