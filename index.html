@@ -1,203 +1,48 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tropa do BDJ</title>
-<style>
-body {
-    margin:0;
-    background:#0d0d0d;
-    font-family: Arial, sans-serif;
-    color:white;
-    overflow-x:hidden;
-}
-header {
-    text-align:center;
-    padding:30px 10px;
-    font-size:32px;
-    font-weight:bold;
-    background:#111;
-    border-bottom:3px solid #a400ff;
-    text-shadow: 0 0 10px #a400ff;
-}
-.container {
-    width:90%;
-    max-width:900px;
-    margin:30px auto;
-}
-.card {
-    background:#151515;
-    border:2px solid #a400ff;
-    border-radius:15px;
-    padding:20px;
-    margin-bottom:25px;
-    display:flex;
-    align-items:center;
-    gap:20px;
-    transition:0.3s;
-    box-shadow: 0 0 15px rgba(164,0,255,0.5);
-}
-.card:hover {
-    transform:scale(1.02);
-    border-color:#d266ff;
-    box-shadow: 0 0 25px rgba(210,102,255,0.7);
-}
-.profile-img {
-    width:90px;
-    height:90px;
-    border-radius:50%;
-    border:3px solid #a400ff;
-    object-fit:cover;
-}
-.info {
-    flex:1;
-}
-.name {
-    font-size:24px;
-    font-weight:bold;
-    color:#dcb3ff;
-}
-.status {
-    margin-top:5px;
-    font-size:14px;
-}
-.live-dot {
-    width:12px;
-    height:12px;
-    border-radius:50%;
-    display:inline-block;
-    margin-right:6px;
-}
-.btn {
-    display:inline-block;
-    padding:10px 18px;
-    background:#a400ff;
-    color:white;
-    text-decoration:none;
-    border-radius:8px;
-    font-weight:bold;
-    transition:0.2s;
-    margin-bottom:5px;
-}
-.btn:hover {
-    background:#c042ff;
-}
-.clips {
-    margin-top:8px;
-    display:flex;
-    gap:5px;
-}
-.clip-btn {
-    background:#5c00ff;
-    padding:5px 10px;
-    border-radius:6px;
-    text-decoration:none;
-    color:white;
-    font-size:12px;
-}
-.clip-btn:hover {
-    background:#7a2bff;
-}
-.extra-btns {
-    margin-top:10px;
-    display:flex;
-    gap:8px;
-}
-.extra-btn {
-    background:#00d4ff;
-    padding:5px 10px;
-    border-radius:6px;
-    text-decoration:none;
-    color:#000;
-    font-weight:bold;
-    font-size:12px;
-}
-.extra-btn:hover{
-    background:#00a8cc;
-}
-</style>
+  <meta charset="UTF‑8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tropa do BDJ</title>
+  <style>
+    body { background: #0d0d0d; color: #fff; font-family: Arial, sans-serif; margin:0; padding:20px; }
+    header { text-align:center; margin-bottom:30px; font-size:32px; color:#a400ff; }
+    .card { background:#151515; border:2px solid #5a00ff; border-radius:12px; padding:15px; margin-bottom:20px;
+            display:flex; align-items:center; gap:15px; transition:0.2s; }
+    .card:hover { border-color:#8b2bff; }
+    .avatar { width:70px; height:70px; border-radius:50%; border:2px solid #5a00ff; object-fit:cover; }
+    .info { flex:1; }
+    .name { font-size:20px; font-weight:bold; color:#cfc; }
+    .btn { text-decoration:none; padding:8px 14px; background:#5a00ff; color:#000; border-radius:6px;
+           font-weight:bold; transition:0.2s; }
+    .btn:hover { background:#7a2bff; }
+  </style>
 </head>
 <body>
 
 <header>TROPA DO BDJ</header>
 
-<div class="container" id="streamers"></div>
+<div id="container"></div>
 
 <script>
-const streamers = [
-    {
-        name:"JonVlogs",
-        twitch:"JonVlogs",
-        youtube:"",
-        instagram:"",
-        clips:["https://clips.twitch.tv/clip1","https://clips.twitch.tv/clip2","https://clips.twitch.tv/clip3"]
-    },
-    {
-        name:"MarcoVe",
-        twitch:"MarcoVe",
-        youtube:"",
-        instagram:"",
-        clips:["https://clips.twitch.tv/clip1","https://clips.twitch.tv/clip2","https://clips.twitch.tv/clip3"]
-    },
-    {
-        name:"Fontinnelerj",
-        twitch:"Fontinnelerj",
-        youtube:"",
-        instagram:"",
-        clips:["https://clips.twitch.tv/clip1","https://clips.twitch.tv/clip2","https://clips.twitch.tv/clip3"]
-    },
-    {
-        name:"jhowrj1",
-        twitch:"jhowrj1",
-        youtube:"",
-        instagram:"",
-        clips:["https://clips.twitch.tv/clip1","https://clips.twitch.tv/clip2","https://clips.twitch.tv/clip3"]
-    }
-];
+  const streamers = ["JonVlogs","MarcoVe","Fontinnelerj","jhowrj1"];
+  const container = document.getElementById("container");
 
-async function loadStreamers(){
-    const container = document.getElementById("streamers");
+  streamers.forEach(user => {
+    const avatarUrl = `https://decapi.me/twitch/avatar/${user}`;
+    const twitchUrl = `https://twitch.tv/${user}`;
 
-    for(const s of streamers){
-        const avatarURL = `https://decapi.me/twitch/avatar/${s.twitch}`;
-        const followersURL = `https://decapi.me/twitch/followers/${s.twitch}`;
-        const liveURL = `https://decapi.me/twitch/online/${s.twitch}`;
-        const latestStreamURL = `https://decapi.me/twitch/last_stream/${s.twitch}`;
-
-        const avatar = await fetch(avatarURL).then(r=>r.text());
-        const followers = await fetch(followersURL).then(r=>r.text());
-        const liveText = await fetch(liveURL).then(r=>r.text());
-        const latestStream = await fetch(latestStreamURL).then(r=>r.text());
-        const isLive = liveText.toLowerCase().includes("online");
-
-        let clipsHTML = "";
-        s.clips.forEach((c,i)=>{
-            clipsHTML += `<a class="clip-btn" href="${c}" target="_blank">Clip ${i+1}</a>`;
-        });
-
-        let extraHTML = "";
-        if(s.youtube) extraHTML += `<a class="extra-btn" href="${s.youtube}" target="_blank">YouTube</a>`;
-        if(s.instagram) extraHTML += `<a class="extra-btn" href="${s.instagram}" target="_blank">Instagram</a>`;
-
-        container.innerHTML += `
-        <div class="card">
-            <img class="profile-img" src="${avatar}" alt="${s.name}">
-            <div class="info">
-                <div class="name">${s.name}</div>
-                <div class="status"><span class="live-dot" style="background:${isLive?"lime":"red"}"></span>${isLive?"AO VIVO AGORA":"Offline"}</div>
-                <div class="status">Seguidores: ${followers}</div>
-                <div class="status">Última Stream: ${latestStream}</div>
-                <div class="clips">${clipsHTML}</div>
-                <div class="extra-btns">${extraHTML}</div>
-            </div>
-            <a class="btn" href="https://twitch.tv/${s.twitch}" target="_blank">Ver Twitch</a>
+    const cardHTML = `
+      <div class="card">
+        <img class="avatar" src="${avatarUrl}" alt="Avatar ${user}" />
+        <div class="info">
+          <div class="name">${user}</div>
         </div>
-        `;
-    }
-}
-
-loadStreamers();
+        <a class="btn" href="${twitchUrl}" target="_blank">Ver Twitch</a>
+      </div>
+    `;
+    container.innerHTML += cardHTML;
+  });
 </script>
 
 </body>
