@@ -1,48 +1,111 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF‑8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tropa do BDJ</title>
-  <style>
-    body { background: #0d0d0d; color: #fff; font-family: Arial, sans-serif; margin:0; padding:20px; }
-    header { text-align:center; margin-bottom:30px; font-size:32px; color:#a400ff; }
-    .card { background:#151515; border:2px solid #5a00ff; border-radius:12px; padding:15px; margin-bottom:20px;
-            display:flex; align-items:center; gap:15px; transition:0.2s; }
-    .card:hover { border-color:#8b2bff; }
-    .avatar { width:70px; height:70px; border-radius:50%; border:2px solid #5a00ff; object-fit:cover; }
-    .info { flex:1; }
-    .name { font-size:20px; font-weight:bold; color:#cfc; }
-    .btn { text-decoration:none; padding:8px 14px; background:#5a00ff; color:#000; border-radius:6px;
-           font-weight:bold; transition:0.2s; }
-    .btn:hover { background:#7a2bff; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tropa do BDJ</title>
+<style>
+body {
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1a0a2a, #0d0d0d);
+    color: white;
+}
+header {
+    text-align:center;
+    padding:25px 10px;
+    font-size:36px;
+    font-weight:bold;
+    color:#ff00ff;
+    text-shadow: 0 0 10px #ff00ff, 0 0 20px #a400ff;
+    position: relative;
+}
+header img {
+    position: absolute;
+    left:20px;
+    top:10px;
+    width:50px;
+    height:50px;
+}
+.container {
+    width:90%;
+    max-width:900px;
+    margin:30px auto;
+}
+.card {
+    display:flex;
+    align-items:center;
+    gap:20px;
+    background: rgba(30,0,60,0.7);
+    border:2px solid #a400ff;
+    border-radius:15px;
+    padding:15px;
+    margin-bottom:20px;
+    box-shadow: 0 0 15px rgba(164,0,255,0.5);
+    transition: 0.3s;
+}
+.card:hover {
+    transform: scale(1.03);
+    border-color:#ff66ff;
+    box-shadow:0 0 25px rgba(255,0,255,0.7);
+}
+.avatar {
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    border:3px solid #ff00ff;
+    object-fit:cover;
+}
+.info {
+    flex:1;
+}
+.name {
+    font-size:22px;
+    font-weight:bold;
+    color:#ff99ff;
+}
+.btn {
+    padding:10px 18px;
+    text-decoration:none;
+    background:#ff00ff;
+    color:#000;
+    font-weight:bold;
+    border-radius:8px;
+    transition:0.2s;
+}
+.btn:hover {
+    background:#ff66ff;
+}
+</style>
 </head>
 <body>
 
-<header>TROPA DO BDJ</header>
+<header>
+  <img src="https://i.imgur.com/8oF4X6L.png" alt="Logo Tropa BDJ">
+  TROPA DO BDJ
+</header>
 
-<div id="container"></div>
+<div class="container" id="streamers"></div>
 
 <script>
-  const streamers = ["JonVlogs","MarcoVe","Fontinnelerj","jhowrj1"];
-  const container = document.getElementById("container");
+const streamers = ["JonVlogs","MarcoVe","Fontinnelerj","jhowrj1"];
+const container = document.getElementById("streamers");
 
-  streamers.forEach(user => {
-    const avatarUrl = `https://decapi.me/twitch/avatar/${user}`;
-    const twitchUrl = `https://twitch.tv/${user}`;
+streamers.forEach(user => {
+  const avatarUrl = `https://decapi.me/twitch/avatar/${user}`;
+  const twitchUrl = `https://twitch.tv/${user}`;
 
-    const cardHTML = `
-      <div class="card">
-        <img class="avatar" src="${avatarUrl}" alt="Avatar ${user}" />
-        <div class="info">
-          <div class="name">${user}</div>
-        </div>
-        <a class="btn" href="${twitchUrl}" target="_blank">Ver Twitch</a>
+  const cardHTML = `
+    <div class="card">
+      <img class="avatar" src="${avatarUrl}" alt="${user}">
+      <div class="info">
+        <div class="name">${user}</div>
       </div>
-    `;
-    container.innerHTML += cardHTML;
-  });
+      <a class="btn" href="${twitchUrl}" target="_blank">Ver Twitch</a>
+    </div>
+  `;
+  container.innerHTML += cardHTML;
+});
 </script>
 
 </body>
