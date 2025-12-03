@@ -18,29 +18,27 @@ header {
     font-weight:bold;
     color:#ff00ff;
     text-shadow: 0 0 10px #ff00ff, 0 0 20px #a400ff;
-    position: relative;
-}
-header img {
-    position: absolute;
-    left:20px;
-    top:10px;
-    width:50px;
-    height:50px;
 }
 .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap:20px;
     width:90%;
-    max-width:900px;
+    max-width:1200px;
     margin:30px auto;
 }
 .card {
+    flex: 1 1 200px; /* base width 200px, cresce se houver espaço */
+    max-width: 250px;
     display:flex;
+    flex-direction: column;
     align-items:center;
-    gap:20px;
+    gap:10px;
     background: rgba(30,0,60,0.7);
     border:2px solid #a400ff;
     border-radius:15px;
     padding:15px;
-    margin-bottom:20px;
     box-shadow: 0 0 15px rgba(164,0,255,0.5);
     transition: 0.3s;
 }
@@ -56,16 +54,25 @@ header img {
     border:3px solid #ff00ff;
     object-fit:cover;
 }
-.info {
-    flex:1;
-}
 .name {
-    font-size:22px;
+    font-size:20px;
     font-weight:bold;
     color:#ff99ff;
+    text-align:center;
+}
+.status {
+    font-size:14px;
+    margin-top:4px;
+}
+.live-dot {
+    display:inline-block;
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    margin-right:6px;
 }
 .btn {
-    padding:10px 18px;
+    padding:8px 14px;
     text-decoration:none;
     background:#ff00ff;
     color:#000;
@@ -76,12 +83,18 @@ header img {
 .btn:hover {
     background:#ff66ff;
 }
+@media (max-width:800px){
+    .card { flex: 1 1 45%; } /* 2 por linha em tablets/telemóveis grandes */
+}
+@media (max-width:500px){
+    .card { flex: 1 1 90%; } /* 1 por linha em telemóveis */
+}
 </style>
 </head>
 <body>
 
 <header>
-  <img src="https://i.imgur.com/8oF4X6L.png" alt="Logo Tropa BDJ">
+  <img src="https://i.imgur.com/8oF4X6L.png" alt="Logo Tropa BDJ" style="position:absolute; left:20px; top:20px; width:50px; height:50px;">
   TROPA DO BDJ
 </header>
 
@@ -91,16 +104,19 @@ header img {
 const streamers = ["JonVlogs","MarcoVe","Fontinnelerj","jhowrj1"];
 const container = document.getElementById("streamers");
 
-streamers.forEach(user => {
+streamers.forEach(async user => {
   const avatarUrl = `https://decapi.me/twitch/avatar/${user}`;
   const twitchUrl = `https://twitch.tv/${user}`;
+  const liveUrl = `https://decapi.me/twitch/online/${user}`;
+
+  const liveText = await fetch(liveUrl).then(r=>r.text());
+  const isLive = liveText.toLowerCase().includes("online");
 
   const cardHTML = `
     <div class="card">
       <img class="avatar" src="${avatarUrl}" alt="${user}">
-      <div class="info">
-        <div class="name">${user}</div>
-      </div>
+      <div class="name">${user}</div>
+      <div class="status"><span class="live-dot" style="background:${isLive?'lime':'red'}"></span>${isLive?'AO VIVO':'Offline'}</div>
       <a class="btn" href="${twitchUrl}" target="_blank">Ver Twitch</a>
     </div>
   `;
